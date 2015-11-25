@@ -1,10 +1,8 @@
 /**
-
   upload.pde 内の
     String imgFilePath = "C:/"+imgFileName;
     String txtFilePath = "C:/"+textFileName;
   は、Processing実行環境に合わせて変更してください。
-
 **/
 
 import ddf.minim.*;
@@ -33,8 +31,15 @@ String bgm =
 String imgFileName = "";  // 保存したファイル名をいれてください
 String textFileName = "ranking.txt";
 
+// ランキング登録用
+String playerName = "";
+String point = "";
+
 // アップロードの有無
-boolean upload = false;
+boolean fileUpload = false;
+
+// ランキング追加の判定
+boolean rankingAdd = false;
 
 void setup(){
  size(1024,768);
@@ -57,7 +62,10 @@ void draw(){
       break;
     case 2:
       gameEnd();
-      upload();
+      fileUpload();
+      break;
+    case 3:
+      ranking();
       break;
   }
 }
@@ -87,6 +95,13 @@ void gameEnd() {
   text("thank you",450,350,255);
 }
 
+// ランキング画面
+void ranking(){
+  background(0);
+  rankingPost(playerName, point);
+  gamePhase = 0;
+}
+
 // ゲーム時間表示
 void counter() {
   fill(255);
@@ -96,18 +111,17 @@ void counter() {
 }
 
 // アップロード
-void upload(){
-  if(upload){
-    post(imgFileName, textFileName);
-    upload = false;
+void fileUpload(){
+  if(fileUpload){
+    filePost(imgFileName, textFileName);
+    fileUpload = false;
   }
 }
 
 // フラグリセット
 void reset(){
-  if(!upload){
-    upload = true;
-  }
+  if(!fileUpload) fileUpload = true;
+  if(!rankingAdd) rankingAdd = true;
 }
 
 // マウスクリック時処理
@@ -115,6 +129,7 @@ void mouseClicked(){
   if(gamePhase == 0 && mouseButton == LEFT) gamePhase = 1;
   else if(mouseButton == RIGHT){
     gamePhase = 0;
-    upload = true;
+    fileUpload = true;
   }
+  if(gamePhase == 2 && mouseButton == LEFT) gamePhase = 3;
 }
