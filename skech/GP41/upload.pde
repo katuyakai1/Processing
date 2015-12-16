@@ -4,10 +4,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-boolean fileUpload(String url, String imgFileName, String textFileName) {
+boolean fileUpload(String url, String imgFileName) {
 
   String imgFilePath = "C:/"+imgFileName;
-  //String txtFilePath = "C:/"+textFileName;
   
   try {
     DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -20,9 +19,7 @@ boolean fileUpload(String url, String imgFileName, String textFileName) {
     MultipartEntity mentity = new MultipartEntity();
     
     mentity.addPart("imgFile", new FileBody(upfile));
-    //mentity.addPart("txtFile", new FileBody(txtUpfile));
     mentity.addPart("imgFileName", new StringBody(imgFileName));
-    //mentity.addPart("txtFileName", new StringBody(textFileName));
  
     httpPost.setEntity(mentity);
  
