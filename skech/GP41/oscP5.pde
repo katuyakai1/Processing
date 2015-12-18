@@ -27,12 +27,6 @@ void oscEvent(OscMessage theOscMessage) {
     AValue.set(0,theOscMessage.get(0).floatValue());
     AValue.set(1,theOscMessage.get(1).floatValue());
     AValue.set(2,theOscMessage.get(2).floatValue());
-    GValue.set(0,theOscMessage.get(3).floatValue());
-    GValue.set(1,theOscMessage.get(4).floatValue());
-    GValue.set(2,theOscMessage.get(5).floatValue());
-    //OValue.set(0,theOscMessage.get(6).floatValue());
-    //OValue.set(1,theOscMessage.get(7).floatValue());
-    //OValue.set(2,theOscMessage.get(8).floatValue());
   }
 
 }
