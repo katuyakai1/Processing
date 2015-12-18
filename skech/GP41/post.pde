@@ -1,5 +1,5 @@
-void filePost(String imgFileName, String textFileName){ 
-  fileUpload("http://japaan.jp/hal/mago/upload/", imgFileName, textFileName);
+void filePost(String imgFileName){ 
+  fileUpload("http://japaan.jp/hal/mago/upload/", imgFileName);
 }
 
 void rankingPost(String playerName, String point){

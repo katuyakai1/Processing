@@ -9,11 +9,9 @@ import java.util.regex.Matcher;
 import java.util.Random;
 
 import ddf.minim.*;
-import fullscreen.*;
 
 Minim minim;
 AudioPlayer player;
-FullScreen fs;
 
 PFont hello;
 int x;
@@ -46,7 +44,7 @@ String[] bgm = {
   "quickly a star in the night sky.mp3"};  //7
 
 // アップロードするファイル名
-String imgFileName = "";  // 保存した画像ファイル名をいれてください
+String imgFileName = "";
 String point = "";
 
 // ランキング登録用
@@ -77,7 +75,7 @@ void setup() {
 
   smooth();
   fill(255);
-  hello = loadFont("BrowalliaNew-Bold-48.vlw"); 
+  hello = loadFont("BradleyHandITC-48.vlw"); 
   textFont(hello, 32);
 }
 
