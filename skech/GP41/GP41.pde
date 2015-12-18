@@ -25,12 +25,22 @@ int gm;
 PImage img;
 PImage bg;
 int gamePoint;
-int imgPosX = 0;
-int imgPosY = 0;
+int imgPosX = 1000;
+int imgPosY = 1000;
 int moveX = 1;
-int moveY = 1;
-int speed = 1;
+int moveY = 2;
+int speed = 2;
 Random r = new Random();
+
+int SPEED_THRESHOLD = 25;
+int SHAKE_TIMEOUT = 500;
+int SHAKE_DURATION = 200;
+int SHAKE_COUNT = 1;
+int mShakeCount = 0;
+long mLastTime = 0;
+long mLastAccel = 0;
+long mLastShake = 0;
+float mLastX, mLastY, mLastZ = 0;
 
 // BGM
 String[] bgm = {
@@ -72,6 +82,9 @@ void setup() {
   minim = new Minim(this);
   player = minim.loadFile(bgm[0], 2048);
   player.loop();
+  
+  // OSC通信開始
+  oscSetup();
 
   smooth();
   fill(255);
@@ -128,8 +141,7 @@ void title() {
   teamLogo = loadImage("title.png");
   image(teamLogo, 35, 150, teamLogo.width*0.8, teamLogo.height*0.8);
   m = 3600;
-  //gm = 5940;
-  gm = 360;
+  gm = 600;
 }
 
 /****************************
@@ -177,18 +189,26 @@ void gameTitle() {
 void gamePlay() {
   bg = loadImage("sora.jpg");
   img  = loadImage("star.png");
-
-  imgPosX += moveX * speed;
-  imgPosY += moveY * speed;
-
   image(bg, 0, 0);
 
   gameTime();
   gameUI();
+  
+  int accel = abs((int)AValue.get(0).floatValue() + (int)AValue.get(1).floatValue() + (int)AValue.get(2).floatValue());
 
-  image(img, imgPosX, imgPosY, img.width/4, img.height/4);
-  if (imgPosX < width) imgPosX = imgPosX + img.width/4;
-  if (imgPosY < height)imgPosY = imgPosY + img.height/4;
+  imgPosX += moveX * speed;
+  imgPosY += moveY * speed;
+  
+  image(img, imgPosX, imgPosY, img.width/6, img.height/6);
+  if (imgPosX < width) imgPosX = imgPosX + img.width/6;
+  if (imgPosY < height)imgPosY = imgPosY + img.height/6;
+
+  if(accel > 3){
+    boolean isShaked = detectShake(AValue.get(0), AValue.get(1), AValue.get(2));
+    if(isShaked){
+      shake();
+    }
+  }
 
   if (gm < 0) {
     point += gamePoint;
@@ -207,6 +227,48 @@ void gameTime() {
   textSize(40);
   text(gm/60, 50, 80, 100);
   gm -= 1;
+}
+
+// 端末を振った時の動作
+void shake(){
+  gamePoint += 10;
+  imgPosX = r.nextInt(width)-50;
+  imgPosY = 0;
+  moveX = r.nextInt(10);
+  moveY = r.nextInt(10);
+}
+
+// 端末を振ったかのチェック
+boolean detectShake(float x, float y, float z){
+    boolean isShaked = false;
+    // 時間の確認
+    long now = System.currentTimeMillis();
+    if(mLastTime == 0){
+        mLastTime = now;
+    }
+    // 時間内にさらに振られたかを確認
+    if(now - mLastAccel > SHAKE_TIMEOUT){
+        mShakeCount = 0;
+    }
+    // 速度を算出
+    long diff = now - mLastTime;
+    float speed = Math.abs(x + y + z - mLastX - mLastY - mLastZ) / diff * 10000;
+    if(speed > SPEED_THRESHOLD){
+        // 規定回数（SHAKE_COUNT）振られたかの確認
+        // 前回振られた時から規定時間（SHAKE_DURATION）が経過したかの確認
+        if(++mShakeCount >= SHAKE_COUNT && now - mLastShake > SHAKE_DURATION){
+            mLastShake = now;
+            mShakeCount = 0;
+            isShaked = true;
+        }
+        // 規定速度（SPEED_THRESHOLD）を超える速度で端末を振られた時刻をセット
+        mLastAccel = now;
+    }
+    mLastTime = now;
+    mLastX = x;
+    mLastY = y;
+    mLastZ = z;
+    return isShaked;
 }
 
 /****************************
@@ -297,9 +359,10 @@ void mouseClicked() {
 }
 
 /****************************
- ゲーム画面で動作するキーイベント
+ キーイベント
  ****************************/
 void keyPressed(KeyEvent e ) {
+  /*
   if (gamePhase == 4) {
     String pressedKey = String.valueOf(key);
     Pattern p = Pattern.compile("[0-9a-zA-Z]");
@@ -312,7 +375,8 @@ void keyPressed(KeyEvent e ) {
       moveY = r.nextInt(10);
     }
   }
-  
+  */
+
   if (gamePhase == 6) {
     //登録処理
     if (key == ENTER) {
