@@ -12,10 +12,9 @@ NetAddress myRemoteLocation;
 KetaiSensor sensor;
 KetaiGesture gesture;
 
-String x;
 ArrayList<Float> AValue = new ArrayList<Float>();
 ArrayList<Float> GValue = new ArrayList<Float>();
-ArrayList<Float> OValue = new ArrayList<Float>();
+//ArrayList<Float> OValue = new ArrayList<Float>();
 
 void setup() {
   oscP5 = new OscP5(this, 11001);
@@ -27,7 +26,7 @@ void setup() {
   for(int i = 0; i < 3; i++){
     AValue.add(new Float(0));
     GValue.add(new Float(0));
-    OValue.add(new Float(0));
+    //OValue.add(new Float(0));
   }
 
   sensor.enableAccelerometer();
@@ -43,9 +42,9 @@ void draw() {
   info += "AccelerometerX:"+AValue.get(0)+"\n";
   info += "AccelerometerY:"+AValue.get(1)+"\n";
   info += "AccelerometerZ:"+AValue.get(2)+"\n";
-  info += "GyroscopeX:"+GValue.get(0)+"\n";
-  info += "GyroscopeY:"+GValue.get(1)+"\n";
-  info += "GyroscopeZ:"+GValue.get(2)+"\n";
+  //info += "GyroscopeX:"+GValue.get(0)+"\n";
+  //info += "GyroscopeY:"+GValue.get(1)+"\n";
+  //info += "GyroscopeZ:"+GValue.get(2)+"\n";
   //info += "OrientationX:"+OValue.get(0)+"\n";
   //info += "OrientationY:"+OValue.get(1)+"\n";
   //info += "OrientationZ:"+OValue.get(2)+"\n";
@@ -95,7 +94,7 @@ void onGyroscopeEvent(float x, float y, float z){
     GValue.set(1,GY);
     GValue.set(2,GZ);
 }
- 
+/*
 void onOrientationEvent(float x, float y, float z){
     float OX = 0.9*OValue.get(0)+0.1*x;
     float OY = 0.9*OValue.get(1)+0.1*y;
@@ -105,3 +104,4 @@ void onOrientationEvent(float x, float y, float z){
     OValue.set(1,OY);
     OValue.set(2,OZ);
 }
+*/
