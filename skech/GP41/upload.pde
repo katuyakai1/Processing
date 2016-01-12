@@ -6,7 +6,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 boolean fileUpload(String url, String imgFileName) {
 
-  String imgFilePath = "C:/"+imgFileName;
+  String imgFilePath = "C:\\HAL MS\\Sketchbooks\\20151222\\GP41\\data\\"+imgFileName;
   //String txtFilePath = "C:/"+textFileName;
   
   try {

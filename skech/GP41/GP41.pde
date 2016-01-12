@@ -9,9 +9,13 @@ import java.util.regex.Matcher;
 import java.util.Random;
 
 import ddf.minim.*;
+import processing.video.*;
 
 Minim minim;
 AudioPlayer player;
+
+Draw draw;
+String imgNum;
 
 PFont hello;
 int x;
@@ -88,8 +92,11 @@ void setup() {
 
   smooth();
   fill(255);
-  hello = loadFont("BradleyHandITC-48.vlw"); 
+  hello = loadFont("BrowalliaNew-Bold-48.vlw"); 
   textFont(hello, 32);
+  
+  draw = new Draw();
+  draw.setup(this);
 }
 
 /* 
@@ -104,7 +111,7 @@ void setup() {
  6：ランキング画面
  */
 void draw() {
-  background(0);
+//  background(0);
   switch(gamePhase) {
   case 0:
     reset();
@@ -112,8 +119,13 @@ void draw() {
     break;
   case 1:
     painting();
+    draw.drawTime();
     break;
   case 2:
+    if (fileUpload) {
+      imgNum = draw.drawEnd();      
+      imgFileName = imgNum + "_web.png";
+    }
     paintEnd();
     fileUpload();
     break;
@@ -188,7 +200,7 @@ void gameTitle() {
 // ゲーム画面
 void gamePlay() {
   bg = loadImage("sora.jpg");
-  img  = loadImage("star.png");
+  img  = loadImage(imgNum + "_game.png");
   image(bg, 0, 0);
 
   gameTime();
